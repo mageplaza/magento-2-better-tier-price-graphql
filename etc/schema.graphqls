@@ -1,0 +1,63 @@
+# Mageplaza
+#
+# NOTICE OF LICENSE
+#
+# This source file is subject to the Mageplaza.com license that is
+# available through the world-wide-web at this URL:
+# https://www.mageplaza.com/LICENSE.txt
+#
+# DISCLAIMER
+#
+# Do not edit or add to this file if you wish to upgrade this extension to newer
+# version in the future.
+#
+# @category    Mageplaza
+# @package     Mageplaza_BetterTierPriceGraphQl
+# @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+# @license     https://www.mageplaza.com/LICENSE.txt
+
+type Query {
+    MpBetterTierPriceGetTierList(
+        productId: Int! @doc(description: "Product Id needs to be searched.")
+        pageSize: Int = 5 @doc(description: "How many items should show on the page?")
+        currentPage: Int = 1 @doc(description: "Allow page number to start with 1")
+    ):MpBetterTierPriceTiersOutput @resolver(class: "Mageplaza\\BetterTierPriceGraphQl\\Model\\Resolver\\Tier") @doc(description: "The query searches for tier that match the criteria specified in the filter.")
+    MpBetterTierPriceGetConfig(
+        storeId: Int @doc(description: "Store Id")
+    ):MpBetterTierPriceConfigOutput @resolver(class: "Mageplaza\\BetterTierPriceGraphQl\\Model\\Resolver\\Config") @doc(description: "The query get data for faqs config.")
+}
+
+type MpBetterTierPriceTiersOutput {
+    total_count: Int @doc(description: "The total number of results returned when a query is applied"),
+    items: [MpBetterTierPriceTier] @doc(description: "MpMageplazaFaqsArticle data is satisfied"),
+    pageInfo: PageInfo @doc(description: "An object that includes the page_info and currentPage values specified in the query")
+}
+
+type MpBetterTierPriceConfigOutput {
+    general: MpBetterTierPriceGeneralConfigOutput
+}
+type MpBetterTierPriceGeneralConfigOutput {
+    enabled: Boolean @doc(description: "Is enabled"),
+    enabled_tabular: Boolean @doc(description: "Is enabled tabular"),
+    auto_change: Boolean @doc(description: "Is auto change"),
+    applicable_only: Boolean @doc(description: "applicable only"),
+    enabled_specific_customer: Boolean @doc(description: "Is enabled specific custimer"),
+    title: String @doc(description: "Tittle")
+}
+
+type MpBetterTierPriceTier {
+    qty: Int @doc(description: "Qty")
+    save_amount: Int @doc(description: "Save amount")
+    price_per_item: String @doc(description: "Price per item")
+    customer_id: Int @doc(description: "Customer id")
+    customer_group_id: String @doc(description: "Customer group id")
+}
+
+type PageInfo {
+    pageSize: Int @doc(description: "How many items should show on the page.")
+    currentPage: Int @doc(description: "Allows to using paging it start with 1.")
+    hasNextPage: Boolean @doc(description: "Is next page")
+    hasPreviousPage: Boolean @doc(description: "Is previous page")
+    startPage: Int @doc(description: "Start page")
+    endPage: Int @doc(description: "End page")
+}
