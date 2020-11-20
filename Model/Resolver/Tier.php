@@ -95,7 +95,7 @@ class Tier implements ResolverInterface
         if ($customerId) {
             $groupId = $this->customerSession->create()->getCustomer()->getGroupId();
         } else {
-            $groupId = 0;
+            $groupId = '0';
         }
 
         if (!is_array($specificList)) {
@@ -109,8 +109,8 @@ class Tier implements ResolverInterface
             foreach ($specificList as $item) {
                 $tier = $this->tierListRepository->getTierSpecificList($item, $price);
 
-                if ((int)$tier['customer_id'] === $customerId) {
-                    $tierList[] = $tier;
+                if ($tier['customer_id'] === $customerId) {
+                    $tierList[(int)$tier['qty']] = $tier;
                 }
             }
         }
@@ -121,8 +121,9 @@ class Tier implements ResolverInterface
                 $tier = $this->tierListRepository->getTierNormalList($item, $price);
 
                 foreach (explode(',',$tier['customer_group_id']) as $subGroup) {
-                    if ((int)$subGroup === $groupId) {
-                        $tierList[] = $tier;
+
+                    if ($subGroup === $groupId) {
+                        $tierList[(int)$tier['qty']] = $tier;
                     }
                 }
             }
