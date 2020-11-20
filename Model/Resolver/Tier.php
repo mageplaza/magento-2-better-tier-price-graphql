@@ -24,10 +24,11 @@ declare(strict_types=1);
 namespace Mageplaza\BetterTierPriceGraphQl\Model\Resolver;
 
 use Magento\Catalog\Model\ProductRepository;
-use Magento\Customer\Model\SessionFactory;
+use Magento\CustomerGraphQl\Model\Customer\GetCustomer;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Magento\GraphQl\Model\Query\ContextInterface;
 use Mageplaza\BetterTierPrice\Helper\Data;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Mageplaza\BetterTierPrice\Plugin\Api\Model\GetTierPriceList;
@@ -55,9 +56,9 @@ class Tier implements ResolverInterface
     protected $tierListRepository;
 
     /**
-     * @var SessionFactory
+     * @var GetCustomer
      */
-    protected $customerSession;
+    private $getCustomer;
 
     /**
      * Categories constructor.
@@ -65,18 +66,18 @@ class Tier implements ResolverInterface
      * @param Data $helperData
      * @param ProductRepository $productRepository
      * @param GetTierPriceList $tierListRepository
-     * @param SessionFactory $customerSession
+     * @param GetCustomer $getCustomer
      */
     public function __construct(
         Data $helperData,
         ProductRepository $productRepository,
         GetTierPriceList $tierListRepository,
-        SessionFactory $customerSession
+        GetCustomer $getCustomer
     ) {
         $this->_helperData        = $helperData;
         $this->productRepository  = $productRepository;
         $this->tierListRepository = $tierListRepository;
-        $this->customerSession    = $customerSession;
+        $this->getCustomer = $getCustomer;
     }
 
     /**
@@ -90,12 +91,14 @@ class Tier implements ResolverInterface
         $tierList     = [];
         $price        = $product->getFinalPrice();
         $specificList = $product->getMpSpecificCustomer();
-        $customerId   = $context->getUserId();
-
-        if ($customerId) {
-            $groupId = $this->customerSession->create()->getCustomer()->getGroupId();
+        /** @var ContextInterface $context */
+        if ($context->getExtensionAttributes()->getIsCustomer() === false) {
+            $customerId= '0';
+            $groupId= '0';
         } else {
-            $groupId = '0';
+            $customer = $this->getCustomer->execute($context);
+            $customerId   = $customer->getId();
+            $groupId = $customer->getGroupId();
         }
 
         if (!is_array($specificList)) {
