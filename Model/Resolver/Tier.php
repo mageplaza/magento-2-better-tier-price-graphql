@@ -77,7 +77,7 @@ class Tier implements ResolverInterface
         $this->_helperData        = $helperData;
         $this->productRepository  = $productRepository;
         $this->tierListRepository = $tierListRepository;
-        $this->getCustomer = $getCustomer;
+        $this->getCustomer        = $getCustomer;
     }
 
     /**
@@ -93,12 +93,12 @@ class Tier implements ResolverInterface
         $specificList = $product->getMpSpecificCustomer();
         /** @var ContextInterface $context */
         if ($context->getExtensionAttributes()->getIsCustomer() === false) {
-            $customerId= '0';
-            $groupId= '0';
+            $customerId = '0';
+            $groupId    = '0';
         } else {
-            $customer = $this->getCustomer->execute($context);
-            $customerId   = $customer->getId();
-            $groupId = $customer->getGroupId();
+            $customer   = $this->getCustomer->execute($context);
+            $customerId = $customer->getId();
+            $groupId    = $customer->getGroupId();
         }
 
         if (!is_array($specificList)) {
@@ -113,7 +113,7 @@ class Tier implements ResolverInterface
                 $tier = $this->tierListRepository->getTierSpecificList($item, $price);
 
                 if ($tier['customer_id'] === $customerId) {
-                    $tierList[(int)$tier['qty']] = $tier;
+                    $tierList[(int) $tier['qty']] = $tier;
                 }
             }
         }
@@ -123,10 +123,10 @@ class Tier implements ResolverInterface
             foreach ($normalList as $item) {
                 $tier = $this->tierListRepository->getTierNormalList($item, $price);
 
-                foreach (explode(',',$tier['customer_group_id']) as $subGroup) {
+                foreach (explode(',', $tier['customer_group_id']) as $subGroup) {
 
                     if ($subGroup === $groupId) {
-                        $tierList[(int)$tier['qty']] = $tier;
+                        $tierList[(int) $tier['qty']] = $tier;
                     }
                 }
             }
