@@ -41,7 +41,7 @@ class Config implements ResolverInterface
     private $_helperData;
 
     /**
-     * Categories constructor.
+     * Config constructor.
      *
      * @param Data $helperData
      */

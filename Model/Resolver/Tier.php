@@ -61,7 +61,7 @@ class Tier implements ResolverInterface
     private $getCustomer;
 
     /**
-     * Categories constructor.
+     * Tier constructor.
      *
      * @param Data $helperData
      * @param ProductRepository $productRepository
@@ -92,13 +92,13 @@ class Tier implements ResolverInterface
         $price        = $product->getFinalPrice();
         $specificList = $product->getMpSpecificCustomer();
         /** @var ContextInterface $context */
-        if ($context->getExtensionAttributes()->getIsCustomer() === false) {
-            $customerId = '0';
-            $groupId    = '0';
-        } else {
+        if ($context->getExtensionAttributes()->getIsCustomer() !== false) {
             $customer   = $this->getCustomer->execute($context);
             $customerId = $customer->getId();
             $groupId    = $customer->getGroupId();
+        } else {
+            $customerId = '0';
+            $groupId    = '0';
         }
 
         if (!is_array($specificList)) {
