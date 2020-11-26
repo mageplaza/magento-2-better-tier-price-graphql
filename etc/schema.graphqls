@@ -22,9 +22,7 @@ type Query {
         pageSize: Int = 5 @doc(description: "How many items should show on the page?")
         currentPage: Int = 1 @doc(description: "Allow page number to start with 1")
     ):MpBetterTierPriceTiersOutput @resolver(class: "Mageplaza\\BetterTierPriceGraphQl\\Model\\Resolver\\Tier") @doc(description: "The query searches for tier that match the criteria specified in the filter.")
-    MpBetterTierPriceGetConfig(
-        storeId: Int @doc(description: "Store Id")
-    ):MpBetterTierPriceConfigOutput @resolver(class: "Mageplaza\\BetterTierPriceGraphQl\\Model\\Resolver\\Config") @doc(description: "The query get data for faqs config.")
+    MpBetterTierPriceGetConfig:MpBetterTierPriceConfigOutput @resolver(class: "Mageplaza\\BetterTierPriceGraphQl\\Model\\Resolver\\Config") @doc(description: "The query get data for faqs config.")
 }
 
 type MpBetterTierPriceTiersOutput {
